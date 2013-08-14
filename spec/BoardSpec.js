@@ -65,4 +65,13 @@ describe("Board", function() {
     expect(result).to.eql([[1,0,0],[1,0,0],[1,0,0]]);
   });
 
+  it("should score a rook board properly", function() {
+    var passingBoard = [[1,0,0],[0,1,0],[0,0,1]];
+    var result = window.rookScore(passingBoard);
+    expect(result).to.be.true;
+    var failingBoard = [[1,0,0],[0,1,0],[0,1,0]];
+    var failResult = window.rookScore(failingBoard);
+    expect(failResult).to.be.false;
+  })
+
 });

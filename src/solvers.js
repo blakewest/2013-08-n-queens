@@ -43,6 +43,25 @@ window.rookTraverse = function(board, curRow) {
   }
 };
 
+window.rookScore = function(board) {
+  var cols = [];
+  _.each(board, function() {
+    cols.push(0);
+  });
+  debugger
+  for (var row = 0; row < board.length; row++) {
+    for (var column = 0; column < board[row].length; column++) {
+      if (board[row][column] === 1) {
+        cols[column] = 1;
+      }
+    }
+  }
+  var count = _.reduce(cols, function(initialVal, item) {
+    if(item === 1) return initialVal += 1;
+  }, 0);
+  return count === board.length ? true : false ;
+};
+
 
 // This function uses a board visualizer lets you view an interactive version of any piece matrix.
 
