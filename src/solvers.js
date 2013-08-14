@@ -3,6 +3,9 @@
 // (There are also optimizations that will allow you to skip a lot of the dead search space)
 
 window.findNRooksSolution = function(n){
+  //make nxn empty board.
+  //pass this board to our traverse function
+
   var solution = undefined; //fixme
 
   console.log('Single solution for ' + n + ' rooks:', solution);
@@ -28,6 +31,16 @@ window.countNQueensSolutions = function(n){
 
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
+};
+
+window.rookTraverse = function(board, curRow) {
+  //iterating through curRow row, placing new rook in each column.
+  if (curRow >= board.length) return board;
+
+  for (var column = 0; column < board[curRow].length; column++) {
+    board[curRow][column] = 1;
+    return window.rookTraverse(board, curRow+1);
+  }
 };
 
 

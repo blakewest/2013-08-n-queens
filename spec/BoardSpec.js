@@ -58,4 +58,11 @@ describe("Board", function() {
     ]);
   });
 
+  it("should traverse the solution space", function() {
+    var board = [[0,0,0],[0,0,0],[0,0,0]];
+    result = window.rookTraverse(board, 0);
+    console.log(result);
+    expect(result).to.eql([[1,0,0],[1,0,0],[1,0,0]]);
+  });
+
 });

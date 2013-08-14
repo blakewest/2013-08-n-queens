@@ -58,11 +58,24 @@
     // todo: fill in all these functions - they'll help you!
 
     hasRowConflictAt: function(rowIndex){
-      return false; // fixme
+      return _.reduce(this.model[rowIndex], function(memo, item){
+        if (memo > 1) return true;
+        if (item === 1) memo++;
+        return memo > 1;
+      }, 0);
     },
 
     hasAnyRowConflicts: function(){
-      return false; // fixme
+      //debugger
+      that = this;
+      return _.reduce(this, function(memo, row){
+        if (memo) return true;
+        else {
+          memo = !!(this.hasRowConflictAt(that.indexOf(row)));
+        }
+      }, false);
+
+
     },
 
     hasColConflictAt: function(colIndex){
