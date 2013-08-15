@@ -58,12 +58,12 @@ describe("Board", function() {
     ]);
   });
 
-  it("should traverse the solution space", function() {
-    var board = [[0,0,0],[0,0,0],[0,0,0]];
-    result = window.rookTraverse(board, 0);
-    console.log(result);
-    expect(result).to.eql([[1,0,0],[1,0,0],[1,0,0]]);
-  });
+  // it("should traverse the solution space", function() {
+  //   var board = [[0,0,0],[0,0,0],[0,0,0]];
+  //   result = window.rookTraverse(board, 0);
+  //   console.log(result);
+  //   expect(result).to.eql([[1,0,0],[1,0,0],[1,0,0]]);
+  // });
 
   it("should score a rook board properly", function() {
     var passingBoard = [[1,0,0],[0,1,0],[0,0,1]];
@@ -72,6 +72,6 @@ describe("Board", function() {
     var failingBoard = [[1,0,0],[0,1,0],[0,1,0]];
     var failResult = window.rookScore(failingBoard);
     expect(failResult).to.be.false;
-  })
+  });
 
 });

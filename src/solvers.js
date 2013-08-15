@@ -5,8 +5,9 @@
 window.findNRooksSolution = function(n){
   //make nxn empty board.
   //pass this board to our traverse function
+  var board = window.makeBoard(n);
 
-  var solution = undefined; //fixme
+  var solution = undefined;
 
   console.log('Single solution for ' + n + ' rooks:', solution);
   return solution;
@@ -33,14 +34,32 @@ window.countNQueensSolutions = function(n){
   return solutionCount;
 };
 
-window.rookTraverse = function(board, curRow) {
-  //iterating through curRow row, placing new rook in each column.
-  if (curRow >= board.length) return board;
 
-  for (var column = 0; column < board[curRow].length; column++) {
-    board[curRow][column] = 1;
-    return window.rookTraverse(board, curRow+1);
-  }
+window.rookTraverse = function(bd) {
+  var output = [];
+
+  var walker = function(board, curRow){
+   for (var column = 0; column < board[curRow].length; column++) {
+      var copy = board.slice();
+      copy[curRow][column] = 1;
+      if(curRow === board.length -1) {
+          // console.log('curRow: '+curRow+' ' +
+          //   'board:\n'+board[0].toString()+'\n'+
+          //   board[1].toString()+'\n'+board[2].toString()+'\n');
+        output.push(board);
+        return;
+        // return solutionBoards.push(board);
+      } else {
+        walker(copy, curRow+1);
+        copy[curRow][column] = 0;
+     }
+      // return solutionBoards = window.rookTraverse(board, curRow+1, solutionBoards);
+   }
+  };
+
+  walker(bd, 0);
+
+  return output;
 };
 
 window.rookScore = function(board) {
@@ -48,7 +67,6 @@ window.rookScore = function(board) {
   _.each(board, function() {
     cols.push(0);
   });
-  debugger
   for (var row = 0; row < board.length; row++) {
     for (var column = 0; column < board[row].length; column++) {
       if (board[row][column] === 1) {
@@ -60,6 +78,19 @@ window.rookScore = function(board) {
     if(item === 1) return initialVal += 1;
   }, 0);
   return count === board.length ? true : false ;
+};
+
+window.makeBoard = function(n) {
+  var board = [];
+  var row = [];
+  for (var i = 0; i < n; i++) {
+    row[i] = 0;
+  }
+  for (var j = 0; j < n; j++) {
+    var newRow = row.slice();
+    board.push(newRow);
+  }
+  return board;
 };
 
 
