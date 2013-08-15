@@ -34,19 +34,32 @@ window.countNQueensSolutions = function(n){
   return solutionCount;
 };
 
+window.deepCopy = function(array) {
+  var result = [];
+  for (var i = 0; i < array.length; i++) {
+    var newRow = array[i].slice();
+    result.push(newRow);
+  }
+  return result;
+};
 
 window.rookTraverse = function(bd) {
   var output = [];
 
   var walker = function(board, curRow){
-   for (var column = 0; column < board[curRow].length; column++) {
-      var copy = board.slice();
+   var copy = window.deepCopy(board);
+   for (var column = 0; column < copy[curRow].length; column++) {
       copy[curRow][column] = 1;
-      if(curRow === board.length -1) {
+      if(curRow === board.length - 1) {
+        debugger;
+          console.log(copy[0]);
+          console.log(copy[1]);
+          console.log(copy[2]);
           // console.log('curRow: '+curRow+' ' +
           //   'board:\n'+board[0].toString()+'\n'+
           //   board[1].toString()+'\n'+board[2].toString()+'\n');
-        output.push(board);
+        if (rookScore(copy)) output.push(copy);
+        console.log('output: ' + output);
         return;
         // return solutionBoards.push(board);
       } else {
