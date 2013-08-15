@@ -48,21 +48,21 @@ window.queenTraverse = function(bd) {
 
   var walker = function(board, curRow){
    var copy = window.deepCopy(board);
-   for (var column = 0; column < copy[curRow].length; column++) {
+   for (var column = 0; column < copy.length; column++) {
       copy[curRow][column] = 1;
-      if(curRow === board.length - 1) {
-          console.log(copy[0]);
-          console.log(copy[1]);
-          console.log(copy[2]);
-          // console.log('curRow: '+curRow+' ' +
-          //   'board:\n'+board[0].toString()+'\n'+
-          //   board[1].toString()+'\n'+board[2].toString()+'\n');
-        if (queenScore(copy)) output.push(copy);
-        console.log('output: ' + output);
-        return;
-        // return solutionBoards.push(board);
+      if(curRow === board.length-1) {
+        if (queenScore(copy, curRow)) {
+          output.push(copy);
+          console.log('board ' + '\n' + copy[0] + '\n' + copy[1] + '\n' + copy[2] + '\n' + copy[3] + '\n' + copy[4]);
+        }else {
+          copy[curRow][column] = 0;
+        }
+
       } else {
-        walker(copy, curRow+1);
+        debugger
+        if(queenScore(copy, curRow)) {
+          walker(copy, curRow+1);
+        }
         copy[curRow][column] = 0;
      }
       // return solutionBoards = window.rookTraverse(board, curRow+1, solutionBoards);
@@ -83,18 +83,17 @@ window.rookTraverse = function(bd) {
       copy[curRow][column] = 1;
       if(curRow === board.length - 1) {
         debugger;
-          console.log(copy[0]);
-          console.log(copy[1]);
-          console.log(copy[2]);
+
           // console.log('curRow: '+curRow+' ' +
           //   'board:\n'+board[0].toString()+'\n'+
           //   board[1].toString()+'\n'+board[2].toString()+'\n');
         if (rookScore(copy)) output.push(copy);
-        console.log('output: ' + output);
         return;
         // return solutionBoards.push(board);
       } else {
-        walker(copy, curRow+1);
+        if(rookScore(copy)) {
+          walker(copy, curRow+1);
+        }
         copy[curRow][column] = 0;
      }
       // return solutionBoards = window.rookTraverse(board, curRow+1, solutionBoards);
@@ -102,7 +101,7 @@ window.rookTraverse = function(bd) {
   };
 
   walker(bd, 0);
-
+  console.log(output);
   return output;
 };
 
@@ -132,13 +131,13 @@ window.rookScore = function(board) {
   return count === board.length ? true : false ;
 };
 
-window.queenScore = function(board) {
+window.queenScore = function(board, curRow) {
   var ld = {};
   var rd = {};
   var cols = {};
   var n = board.length;
 
-  for (var row = 0; row < n; row++) {
+  for (var row = 0; row < curRow+1; row++) {
     for (var col = 0; col < n; col++) {
       if (board[row][col] === 1) {
         ld[n - col + 1 + row] = 1;
@@ -147,7 +146,7 @@ window.queenScore = function(board) {
       }
     }
   }
-  if ((Object.keys(ld).length === n) && (Object.keys(rd).length === n) && (Object.keys(cols).length === n)) {
+  if ((Object.keys(ld).length === curRow+1) && (Object.keys(rd).length === curRow+1) && (Object.keys(cols).length === curRow+1)) {
     return true;
   }
   else{
