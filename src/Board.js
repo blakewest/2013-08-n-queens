@@ -44,7 +44,26 @@
     },
 
     hasAnyQueensConflicts: function(){
-      return this.hasAnyRooksConflicts() || this.hasAnyMajorDiagonalConflicts() || this.hasAnyMinorDiagonalConflicts();
+      var ld = {};
+      var rd = {};
+      var cols = {};
+      var n = board.length;
+
+      for (var row = 0; row < curRow+1; row++) {
+        for (var col = 0; col < n; col++) {
+          if (board[row][col] === 1) {
+            ld[n - col + 1 + row] = 1;
+            rd[row + col] = 1;
+            cols[col] = 1;
+          }
+        }
+      }
+      if ((Object.keys(ld).length === curRow+1) && (Object.keys(rd).length === curRow+1) && (Object.keys(cols).length === curRow+1)) {
+        return false;
+      }
+      else{
+        return true;
+      }
     },
 
     _isInBounds: function(rowIndex, colIndex){

@@ -14,24 +14,103 @@ window.findNRooksSolution = function(n){
 };
 
 window.countNRooksSolutions = function(n){
-  var solutionCount = undefined; //fixme
+  var output = [];
+  var board = makeBoard(n);
 
-  console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
-  return solutionCount;
+  var walker = function(board, curRow){
+   var copy = window.deepCopy(board);
+   for (var column = 0; column < copy.length; column++) {
+      copy[curRow][column] = 1;
+      if(curRow === board.length-1) {
+        if (rookScore(copy, curRow)) {
+          output.push(copy); 
+          console.log('board ' + '\n' + copy[0] + '\n' + copy[1] + '\n' + copy[2] + '\n' + copy[3] + '\n' + copy[4]);
+          copy[curRow][column] = 0;
+        }else {
+          copy[curRow][column] = 0;
+        }
+
+      } else {
+        if(rookScore(copy, curRow)) {
+          walker(copy, curRow+1);
+        }
+        copy[curRow][column] = 0;
+     }
+      // return solutionBoards = window.rookTraverse(board, curRow+1, solutionBoards);
+   }
+  };
+
+  walker(board, 0);
+
+  return output.length;
+
 };
 
 window.findNQueensSolution = function(n){
-  var solution = undefined; //fixme
+  debugger;
+  var board = makeBoard(n);
+  var output = [];
 
-  console.log('Single solution for ' + n + ' queens:', solution);
-  return solution;
+  var walker = function(board, curRow){
+   var copy = window.deepCopy(board);
+   for (var column = 0; column < copy.length; column++) {
+      copy[curRow][column] = 1;
+      if(curRow === board.length-1) {
+        if (queenScore(copy, curRow)) {
+          output.push(copy);
+          console.log('board ' + '\n' + copy[0] + '\n' + copy[1] + '\n' + copy[2] + '\n' + copy[3] + '\n' + copy[4]);
+          break;
+        }else {
+          copy[curRow][column] = 0;
+        }
+
+      } else {
+        if(queenScore(copy, curRow)) {
+          walker(copy, curRow+1);
+        }
+        if (!output.length) {
+          copy[curRow][column] = 0;
+        }
+        else {
+          return;
+        }
+     }
+   }
+  };
+  walker(board, 0);
+  return output[0];
 };
 
 window.countNQueensSolutions = function(n){
-  var solutionCount = undefined; //fixme
+  var board = makeBoard(n);
+  var output = [];
 
-  console.log('Number of solutions for ' + n + ' queens:', solutionCount);
-  return solutionCount;
+  var walker = function(board, curRow){
+   var copy = window.deepCopy(board);
+   for (var column = 0; column < copy.length; column++) {
+      copy[curRow][column] = 1;
+      if(curRow === board.length-1) {
+        if (queenScore(copy, curRow)) {
+          output.push(copy); 
+          console.log('board ' + '\n' + copy[0] + '\n' + copy[1] + '\n' + copy[2] + '\n' + copy[3] + '\n' + copy[4]);
+          copy[curRow][column] = 0;
+        }else {
+          copy[curRow][column] = 0;
+        }
+
+      } else {
+        if(queenScore(copy, curRow)) {
+          walker(copy, curRow+1);
+        }
+        copy[curRow][column] = 0;
+     }
+      // return solutionBoards = window.rookTraverse(board, curRow+1, solutionBoards);
+   }
+  };
+
+  walker(board, 0);
+
+  return output.length;
 };
 
 window.deepCopy = function(array) {
@@ -114,22 +193,23 @@ window.rookTraverse1 = function(bd) {
   //made that
 };
 
-window.rookScore = function(board) {
-  var cols = [];
-  _.each(board, function() {
-    cols.push(0);
-  });
-  for (var row = 0; row < board.length; row++) {
-    for (var column = 0; column < board[row].length; column++) {
-      if (board[row][column] === 1) {
-        cols[column] = 1;
+window.rookScore = function(board, curRow) {
+  var cols = {};
+  var n = board.length;
+
+  for (var row = 0; row < curRow+1; row++) {
+    for (var col = 0; col < n; col++) {
+      if (board[row][col] === 1) {
+        cols[col] = 1;
       }
     }
   }
-  var count = _.reduce(cols, function(initialVal, item) {
-    if(item === 1) return initialVal += 1;
-  }, 0);
-  return count === board.length ? true : false ;
+  if (Object.keys(cols).length === curRow+1) {
+    return true;
+  }
+  else{
+    return false;
+  }
 };
 
 window.queenScore = function(board, curRow) {
