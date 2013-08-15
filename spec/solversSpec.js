@@ -48,10 +48,10 @@ describe("solvers", function() {
   });
 
   it('should return some boards', function() {
-    var board = window.makeBoard(5);
+    var board = window.makeBoard(9);
     var result = window.queenTraverse(board);
     console.log(result);
-    expect(result.length).to.be.equal(120);
+    expect(result.length).to.be.equal(352);
   });
 
 });

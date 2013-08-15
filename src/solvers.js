@@ -52,8 +52,9 @@ window.queenTraverse = function(bd) {
       copy[curRow][column] = 1;
       if(curRow === board.length-1) {
         if (queenScore(copy, curRow)) {
-          output.push(copy);
+          output.push(copy); 
           console.log('board ' + '\n' + copy[0] + '\n' + copy[1] + '\n' + copy[2] + '\n' + copy[3] + '\n' + copy[4]);
+          copy[curRow][column] = 0;
         }else {
           copy[curRow][column] = 0;
         }
