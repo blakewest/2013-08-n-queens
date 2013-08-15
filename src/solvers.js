@@ -43,6 +43,37 @@ window.deepCopy = function(array) {
   return result;
 };
 
+window.queenTraverse = function(bd) {
+  var output = [];
+
+  var walker = function(board, curRow){
+   var copy = window.deepCopy(board);
+   for (var column = 0; column < copy[curRow].length; column++) {
+      copy[curRow][column] = 1;
+      if(curRow === board.length - 1) {
+          console.log(copy[0]);
+          console.log(copy[1]);
+          console.log(copy[2]);
+          // console.log('curRow: '+curRow+' ' +
+          //   'board:\n'+board[0].toString()+'\n'+
+          //   board[1].toString()+'\n'+board[2].toString()+'\n');
+        if (queenScore(copy)) output.push(copy);
+        console.log('output: ' + output);
+        return;
+        // return solutionBoards.push(board);
+      } else {
+        walker(copy, curRow+1);
+        copy[curRow][column] = 0;
+     }
+      // return solutionBoards = window.rookTraverse(board, curRow+1, solutionBoards);
+   }
+  };
+
+  walker(bd, 0);
+
+  return output;
+};
+
 window.rookTraverse = function(bd) {
   var output = [];
 
@@ -75,6 +106,14 @@ window.rookTraverse = function(bd) {
   return output;
 };
 
+window.rookTraverse1 = function(bd) {
+  //copy board
+  //make options array 0,1,2,3,... length. length = bd.length
+  //looped through each row of board
+  //choose one at random from available options.
+  //made that
+};
+
 window.rookScore = function(board) {
   var cols = [];
   _.each(board, function() {
@@ -91,6 +130,29 @@ window.rookScore = function(board) {
     if(item === 1) return initialVal += 1;
   }, 0);
   return count === board.length ? true : false ;
+};
+
+window.queenScore = function(board) {
+  var ld = {};
+  var rd = {};
+  var cols = {};
+  var n = board.length;
+
+  for (var row = 0; row < n; row++) {
+    for (var col = 0; col < n; col++) {
+      if (board[row][col] === 1) {
+        ld[n - col + 1 + row] = 1;
+        rd[row + col] = 1;
+        cols[col] = 1;
+      }
+    }
+  }
+  if ((Object.keys(ld).length === n) && (Object.keys(rd).length === n) && (Object.keys(cols).length === n)) {
+    return true;
+  }
+  else{
+    return false;
+  }
 };
 
 window.makeBoard = function(n) {
