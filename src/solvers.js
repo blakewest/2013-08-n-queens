@@ -47,7 +47,6 @@ window.countNRooksSolutions = function(n){
 };
 
 window.findNQueensSolution = function(n){
-  debugger;
   var board = makeBoard(n);
   var output = [];
 
@@ -84,33 +83,73 @@ window.findNQueensSolution = function(n){
 window.countNQueensSolutions = function(n){
   var board = makeBoard(n);
   var output = [];
+  var ld;
+  var rd;
+  var cols;
+  var numSolutions = 0;
 
-  var walker = function(board, curRow){
+
+  var walker = function(board, curRow, ld, rd, cols){
    var copy = window.deepCopy(board);
+   console.log(n);
    for (var column = 0; column < copy.length; column++) {
+      var newLd;
+      var newRd;
+      var newCols;
       copy[curRow][column] = 1;
-      if(curRow === board.length-1) {
-        if (queenScore(copy, curRow)) {
-          output.push(copy); 
-          console.log('board ' + '\n' + copy[0] + '\n' + copy[1] + '\n' + copy[2] + '\n' + copy[3] + '\n' + copy[4]);
-          copy[curRow][column] = 0;
-        }else {
-          copy[curRow][column] = 0;
-        }
 
-      } else {
-        if(queenScore(copy, curRow)) {
-          walker(copy, curRow+1);
-        }
-        copy[curRow][column] = 0;
-     }
-      // return solutionBoards = window.rookTraverse(board, curRow+1, solutionBoards);
-   }
+     for (var col = 0; col < n; col++) {
+       if (copy[curRow][col] === 1) {
+         newLd = 1 << (n - (col+1) + curRow);
+         newRd = 1 << ((2*n - 2) - curRow - col);
+         newCols = 1 << (n - 1) - col;
+       }
+    }
+
+     if(curRow === board.length-1) { //if board complete
+      debugger;
+       if( !(ld & newLd) && !(rd & newRd) && !(cols & newCols) ) { //if board wins
+        //good board. do stuff;
+         numSolutions++;
+         console.log("numSolutions = " + numSolutions);
+         console.log("i'm at this level: " + n);
+         console.log('board ' + '\n' + copy[0] + '\n' + copy[1] + '\n' + copy[2] + '\n' + copy[3] + '\n' + copy[4]);
+         copy[curRow][column] = 0;
+       }else {
+          copy[curRow][column] = 0;
+       }
+     }else {                   //board not complete
+        if( !(ld & newLd) && !(rd & newRd) && !(cols & newCols) ) { // if board valid
+          ld = ld ^ newLd; 
+          rd = rd ^ newRd;
+          cols = cols ^ newCols;
+          //we need to backtrack on the bitshift!!!
+          walker(copy, curRow+1, ld, rd, cols);
+         }
+         copy[curRow][column] = 0;
+      }
+
+     // if(curRow === board.length-1) {
+     //   if (queenScore(copy, curRow)) {
+     //     output.push(copy);
+     //     console.log('board ' + '\n' + copy[0] + '\n' + copy[1] + '\n' + copy[2] + '\n' + copy[3] + '\n' + copy[4]);
+     //     copy[curRow][column] = 0;
+     //   }else {
+     //     copy[curRow][column] = 0;
+     //   }
+
+     // } else {
+     //     if(queenScore(copy, curRow)) {
+     //     walker(copy, curRow+1);
+     //     }
+     //     copy[curRow][column] = 0;
+     //   }
+    }
   };
+  debugger;
+  walker(board, 0, 0, 0, 0);
 
-  walker(board, 0);
-
-  return output.length;
+  return numSolutions;
 };
 
 window.deepCopy = function(array) {
@@ -122,76 +161,6 @@ window.deepCopy = function(array) {
   return result;
 };
 
-window.queenTraverse = function(bd) {
-  var output = [];
-
-  var walker = function(board, curRow){
-   var copy = window.deepCopy(board);
-   for (var column = 0; column < copy.length; column++) {
-      copy[curRow][column] = 1;
-      if(curRow === board.length-1) {
-        if (queenScore(copy, curRow)) {
-          output.push(copy); 
-          console.log('board ' + '\n' + copy[0] + '\n' + copy[1] + '\n' + copy[2] + '\n' + copy[3] + '\n' + copy[4]);
-          copy[curRow][column] = 0;
-        }else {
-          copy[curRow][column] = 0;
-        }
-
-      } else {
-        debugger
-        if(queenScore(copy, curRow)) {
-          walker(copy, curRow+1);
-        }
-        copy[curRow][column] = 0;
-     }
-      // return solutionBoards = window.rookTraverse(board, curRow+1, solutionBoards);
-   }
-  };
-
-  walker(bd, 0);
-
-  return output;
-};
-
-window.rookTraverse = function(bd) {
-  var output = [];
-
-  var walker = function(board, curRow){
-   var copy = window.deepCopy(board);
-   for (var column = 0; column < copy[curRow].length; column++) {
-      copy[curRow][column] = 1;
-      if(curRow === board.length - 1) {
-        debugger;
-
-          // console.log('curRow: '+curRow+' ' +
-          //   'board:\n'+board[0].toString()+'\n'+
-          //   board[1].toString()+'\n'+board[2].toString()+'\n');
-        if (rookScore(copy)) output.push(copy);
-        return;
-        // return solutionBoards.push(board);
-      } else {
-        if(rookScore(copy)) {
-          walker(copy, curRow+1);
-        }
-        copy[curRow][column] = 0;
-     }
-      // return solutionBoards = window.rookTraverse(board, curRow+1, solutionBoards);
-   }
-  };
-
-  walker(bd, 0);
-  console.log(output);
-  return output;
-};
-
-window.rookTraverse1 = function(bd) {
-  //copy board
-  //make options array 0,1,2,3,... length. length = bd.length
-  //looped through each row of board
-  //choose one at random from available options.
-  //made that
-};
 
 window.rookScore = function(board, curRow) {
   var cols = {};
@@ -212,16 +181,41 @@ window.rookScore = function(board, curRow) {
   }
 };
 
+window.queenBinScore = function(row) {
+  var n = row.length;
+  var ld;
+  var rd;
+  var cols;
+  for (var col = 0; col < row.length; col++) {
+    if (row[col] === 1) {
+      ld = 1 << (n - (col+1) + row);
+      rd = 1 << ((2*n - 1) - 1 - col);
+      cols = 1 << (n - 1) - col;
+    }
+  }
+};
+
 window.queenScore = function(board, curRow) {
-  var ld = {};
-  var rd = {};
-  var cols = {};
+  var ld = {}; //number
+  var rd = {}; //number
+  var cols = {}; //number
+  // and the old number with the new number
+  // if we get all zeroes, it's still valid. else throw away
+  // XOR the old with the new, and pass to next level.
+  // don't worry about leading zeroes
+  // you can get the binary by doing .toString(2);
+
+
+  //to get LD -- bitshift by n-(col+1)+row
+  //to get RD -- bitshift by (2n-1)-1-col
+  //to get col -- bitshift by (n-1)-col
+
   var n = board.length;
 
   for (var row = 0; row < curRow+1; row++) {
     for (var col = 0; col < n; col++) {
       if (board[row][col] === 1) {
-        ld[n - col + 1 + row] = 1;
+        ld[ (n -1) - row + col] = 1;
         rd[row + col] = 1;
         cols[col] = 1;
       }
